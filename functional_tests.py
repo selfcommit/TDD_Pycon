@@ -1,6 +1,8 @@
 from selenium import webdriver
 from django.http import HttpRequest
+from selenium.webdriver.common.keys import Keys
 import unittest
+import time
 
 class NewVisitorTest(unittest.TestCase):
 
@@ -24,8 +26,17 @@ class NewVisitorTest(unittest.TestCase):
 			inputbox.get_attribute('placeholder'),
 			'Enter a to-do item')
 
-		inputbox.send_keys('Buy peacock feathers \n')
+		inputbox.send_keys('Buy peacock feathers')
 		inputbox.send_keys(Keys.ENTER)
+		time.sleep(15)
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_element_by_tag_name('tr')
+
+		self.assertTrue(
+			any(row.text ==  '1: Buy peacock feathers' for row in rows)
+		)
+
+		time.sleep(5)
 		self.fail('Finish the test!')
 
 		#She is invited to enter a to-do item straight away
