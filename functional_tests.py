@@ -1,4 +1,5 @@
 from selenium import webdriver
+from django.http import HttpRequest
 import unittest
 
 class NewVisitorTest(unittest.TestCase):
@@ -15,6 +16,16 @@ class NewVisitorTest(unittest.TestCase):
 		self.browser.get("http://localhost:8000")
 		#She notices the page title and header have to do with todo lists
 		self.assertIn('To-Do', self.browser.title)
+		header = self.browser.find_element_by_tag_name('h1')
+		self.assertIn('To-Do', header.text)
+
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertEqual(
+			inputbox.get_attribute('placeholder'),
+			'Enter a to-do item')
+
+		inputbox.send_keys('Buy peacock feathers \n')
+		inputbox.send_keys(Keys.ENTER)
 		self.fail('Finish the test!')
 
 		#She is invited to enter a to-do item straight away
